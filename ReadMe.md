@@ -1,6 +1,6 @@
 # Introduction
 
-This package just have common models or interfaces that get constantly reused throughout. This should be kept to minimum.
+This package has common models or interfaces that are reused across projects. Keep it small.
 
 - AuditInfo
 - Messages (Generic Bases)
@@ -64,7 +64,7 @@ Example
         public static T Convert<T>(this object instance, params JsonConverter[] converters)
         {
             var serializeObject = JsonConvert.SerializeObject(instance, converters);
-            return JsonConvert.DeserializeObject<T>(serializeObject, converters); ;
+            return JsonConvert.DeserializeObject<T>(serializeObject, converters);
         }
 
 ```
@@ -90,6 +90,14 @@ This is in DomainDrivenDesign, so will have access to this as well
 
 ## Installing from NuGet
 
-To install via NuGet, run this command in NuGet package manager console:
+Package id: **Cbrown11.Common.Models**
 
-PM> Install-Package Common
+```bash
+dotnet add package Cbrown11.Common.Models
+```
+
+In the Package Manager Console:
+
+```
+Install-Package Cbrown11.Common.Models
+```

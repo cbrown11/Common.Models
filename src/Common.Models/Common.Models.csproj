@@ -4,6 +4,12 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Cbrown11.Common.Models</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>cbrown11</Authors>
+    <Description>Common models and interfaces reused across projects.</Description>
+    <RepositoryUrl>https://github.com/cbrown11/Common.Models</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/cbrown11/Common.Models</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
