@@ -1,12 +1,8 @@
-// Copyright (c) Janus Henderson Investors. All rights reserved.
-
 namespace Common.Models.Messages
 {
-    using DomainDrivenDesign.Serializer;
-    using DomainDrivenDesign.Shared;
-    using DomainDrivenDesign.Shared.Interfaces;
-
     using Newtonsoft.Json;
+    using Common.Models.AuditInfo;
+    using Common.Models.Serializer;
 
     public abstract class ExternalEvent : IExternalEvent
     {

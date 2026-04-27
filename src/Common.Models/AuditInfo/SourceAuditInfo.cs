@@ -1,5 +1,3 @@
-using DomainDrivenDesign.Shared.Interfaces;
-
 namespace Common.Models.AuditInfo
 {
     public class SourceAuditInfo : IAuditInfo

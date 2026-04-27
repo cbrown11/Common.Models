@@ -1,10 +1,8 @@
 namespace Common.Models.Messages
 {
-    using DomainDrivenDesign.Serializer;
-    using DomainDrivenDesign.Shared;
-    using DomainDrivenDesign.Shared.Interfaces;
     using Newtonsoft.Json;
-
+    using Common.Models.AuditInfo;
+    using Common.Models.Serializer;
     public class ExternalCommand : IExternalCommand
     {
         public string Id { get; set; }

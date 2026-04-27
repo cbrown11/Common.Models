@@ -1,4 +1,3 @@
-using DomainDrivenDesign.Shared.Interfaces;
 
 namespace Common.Models.Messages
 {
