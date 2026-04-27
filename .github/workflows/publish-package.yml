@@ -1,0 +1,61 @@
+name: Publish package
+
+# Pushes Cbrown11.Common.Models to GitHub Packages (private to the repo unless you change visibility).
+# Triggers: manual, or when you publish a GitHub Release.
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+concurrency:
+  group: publish-package
+  cancel-in-progress: false
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  CONFIGURATION: Release
+  PACKAGE_PROJECT: src/Common.Models/Common.Models.csproj
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore Common.Models.sln --configfile nuget.config
+
+      - name: Build
+        run: dotnet build Common.Models.sln -c ${{ env.CONFIGURATION }} --no-restore
+
+      - name: Test
+        run: dotnet test Common.Models.sln -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
+
+      - name: Pack
+        run: dotnet pack ${{ env.PACKAGE_PROJECT }} -c ${{ env.CONFIGURATION }} --no-build -o "${{ github.workspace }}/artifacts"
+
+      - name: Add GitHub Packages source
+        run: >
+          dotnet nuget add source
+          "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+          --name gpr
+          --username ${{ github.repository_owner }}
+          --password ${{ secrets.GITHUB_TOKEN }}
+          --store-password-in-clear-text
+
+      - name: Push to GitHub Packages
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg \
+            --source gpr \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --skip-duplicate
