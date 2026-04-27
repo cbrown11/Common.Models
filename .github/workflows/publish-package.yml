@@ -1,6 +1,6 @@
 name: Publish package
 
-# Pushes Cbrown11.Common.Models to GitHub Packages (private to the repo unless you change visibility).
+# Pushes Common.Models (NuGet) to GitHub Packages (private to the repo unless you change visibility).
 # NuGet/package version = Major.Minor.Patch.CommitsSinceVersionSource (e.g. 2.0.3.14), not GitVersion's default -ci0014 label. After push from main, tags v{version} if absent. Triggers: push to main, tag v*, release published, manual.
 
 on:
@@ -20,7 +20,7 @@ concurrency:
 env:
   DOTNET_VERSION: "10.0.x"
   CONFIGURATION: Release
-  PACKAGE_PROJECT: src/Common.Models.csproj
+  PACKAGE_PROJECT: src/Common.Models/Common.Models.csproj
 
 jobs:
   publish:
