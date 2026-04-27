@@ -1,12 +1,15 @@
 name: Publish package
 
 # Pushes Cbrown11.Common.Models to GitHub Packages (private to the repo unless you change visibility).
-# Triggers: manual, or when you publish a GitHub Release.
+# Triggers: manual, GitHub Release published, or push of a version tag (v*).
 
 on:
   workflow_dispatch:
   release:
     types: [published]
+  push:
+    tags:
+      - "v*"
 
 concurrency:
   group: publish-package
@@ -41,8 +44,26 @@ jobs:
       - name: Test
         run: dotnet test Common.Models.sln -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
 
+      - name: Resolve package version from tag or release
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "PACKAGE_VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_ENV"
+          elif [[ "${{ github.event_name }}" == "release" ]]; then
+            TAG="${{ github.event.release.tag_name }}"
+            echo "PACKAGE_VERSION=${TAG#v}" >> "$GITHUB_ENV"
+          fi
+
       - name: Pack
-        run: dotnet pack ${{ env.PACKAGE_PROJECT }} -c ${{ env.CONFIGURATION }} --no-build -o "${{ github.workspace }}/artifacts"
+        shell: bash
+        run: |
+          out="${{ github.workspace }}/artifacts"
+          if [[ -n "${PACKAGE_VERSION:-}" ]]; then
+            dotnet pack ${{ env.PACKAGE_PROJECT }} -c ${{ env.CONFIGURATION }} --no-build -o "$out" \
+              -p:Version="$PACKAGE_VERSION" -p:PackageVersion="$PACKAGE_VERSION"
+          else
+            dotnet pack ${{ env.PACKAGE_PROJECT }} -c ${{ env.CONFIGURATION }} --no-build -o "$out"
+          fi
 
       - name: Add GitHub Packages source
         run: >
